@@ -1,12 +1,15 @@
 package convert
 
 import (
+	"log"
 	"strconv"
 	"strings"
 
+	"github.com/hashicorp/terraform/addrs"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/plugin/proto"
 	"github.com/hashicorp/terraform/tfdiags"
+	"github.com/kr/pretty"
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -143,12 +146,21 @@ func PathToAttributePath(p cty.Path) *proto.AttributePath {
 }
 
 func AddrToAttributePath(addr string) *proto.AttributePath {
+	ap := &proto.AttributePath{}
+
+	mi, diags := addrs.ParseRefStr("resource." + addr)
+	if diags.HasErrors() {
+		log.Printf("[ERROR] Unable to parse module instance addr %q: %s", addr, pretty.Sprint(diags))
+		return ap
+	}
+
+	log.Printf("[DEBUG] %q Traversal: %s", addr, pretty.Sprint(mi))
+
 	parts := strings.Split(addr, ".")
 
 	// TODO: How to differentiate between map keys and attributes in the old dotted syntax?
 	// TODO: Support [] syntax
 
-	ap := &proto.AttributePath{}
 	for _, part := range parts {
 		idx, err := strconv.Atoi(part)
 		if err == nil {

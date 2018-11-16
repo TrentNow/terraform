@@ -1,6 +1,7 @@
 package schema
 
 type AttributeError struct {
+	// resourceAddr  string
 	attributeAddr string // dotted syntax
 	origErr       error
 }

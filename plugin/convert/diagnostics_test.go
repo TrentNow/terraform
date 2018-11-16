@@ -432,6 +432,57 @@ func TestAddrToAttributePath(t *testing.T) {
 				},
 			},
 		},
+		{
+			`double.nested.attribute`,
+			&proto.AttributePath{
+				Steps: []*proto.AttributePath_Step{
+					{
+						Selector: &proto.AttributePath_Step_AttributeName{
+							AttributeName: "map_attribute",
+						},
+					},
+					{
+						Selector: &proto.AttributePath_Step_ElementKeyString{
+							ElementKeyString: "key",
+						},
+					},
+				},
+			},
+		},
+		{
+			`double.nested.attribute.with.num_index[5]`,
+			&proto.AttributePath{
+				Steps: []*proto.AttributePath_Step{
+					{
+						Selector: &proto.AttributePath_Step_AttributeName{
+							AttributeName: "map_attribute",
+						},
+					},
+					{
+						Selector: &proto.AttributePath_Step_ElementKeyString{
+							ElementKeyString: "key",
+						},
+					},
+				},
+			},
+		},
+		{
+			`double.nested.attribute.with_map["something"]`,
+			&proto.AttributePath{
+				Steps: []*proto.AttributePath_Step{
+					{
+						Selector: &proto.AttributePath_Step_AttributeName{
+							AttributeName: "map_attribute",
+						},
+					},
+					{
+						Selector: &proto.AttributePath_Step_ElementKeyString{
+							ElementKeyString: "key",
+						},
+					},
+				},
+			},
+		},
 	}
 
 	for i, tc := range testCases {
